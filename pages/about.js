@@ -1,65 +1,65 @@
 // pages/about.js
+
 export default function About() {
   const section = {
     maxWidth: "900px",
     margin: "60px auto",
-    padding: "0 24px",
+    padding: "20px",
     lineHeight: 1.8,
     color: "#374151",
+    fontSize: "18px",
   };
 
-  const h2 = {
-    fontSize: 32,
-    fontWeight: 800,
-    marginBottom: 16,
+  const heading = {
+    fontSize: "32px",
+    fontWeight: "700",
+    marginBottom: "20px",
     color: "#111827",
     textAlign: "center",
   };
 
-  const h3 = {
-    fontSize: 24,
-    fontWeight: 700,
-    marginTop: 32,
-    marginBottom: 12,
+  const subheading = {
+    fontSize: "24px",
+    fontWeight: "600",
+    marginTop: "40px",
+    marginBottom: "12px",
     color: "#2563eb",
   };
 
-  const p = { fontSize: 18, marginBottom: 16 };
-
-  const list = { marginLeft: 20, fontSize: 18 };
-
   return (
-    <section style={section}>
-      <h2>About AquraIQ</h2>
-      <p style={p}>
-        AquraIQ is an AI-powered water intelligence platform bridging water
-        utilities and artificial intelligence companies. We leverage blockchain
-        for transparency, advanced analytics for decision-making, and
-        sustainability metrics to ensure smarter resource management.
+    <div style={section}>
+      <h1 style={heading}>About AquraIQ</h1>
+      <p>
+        AquraIQ bridges water utilities and AI companies using blockchain transparency,
+        advanced analytics, and sustainability metrics. We are committed to building
+        trust and efficiency across two of the world’s most critical industries:
+        <b> water </b> and <b> artificial intelligence</b>.
       </p>
 
-      <h3>Our Mission 🚀</h3>
-      <p style={p}>
-        To revolutionize water sustainability by integrating AI and blockchain,
-        enabling utilities and industries to optimize water consumption,
-        increase efficiency, and reduce environmental impact.
+      <h2 style={subheading}>🌍 Mission</h2>
+      <p>
+        Our mission is to revolutionize how water utilities and AI enterprises collaborate,
+        by providing <b>real-time transparency, verified sustainability data, and AI-powered insights</b>.
+        We aim to ensure water resources are used responsibly while enabling AI companies
+        to optimize their operations with minimal environmental impact.
       </p>
 
-      <h3>Our Vision 🌍</h3>
-      <p style={p}>
-        To become the global standard for AI-driven water intelligence,
-        creating a future where every drop of water is tracked, optimized, and
-        preserved through cutting-edge technology.
+      <h2 style={subheading}>🚀 Vision</h2>
+      <p>
+        Our vision is a <b>future where water and AI industries work hand in hand</b> — 
+        creating a sustainable, transparent, and data-driven ecosystem. 
+        AquraIQ aspires to become the global standard for <b>AI-water accountability</b>, 
+        driving innovation in blockchain auditing, intelligent resource allocation,
+        and sustainability rankings.
       </p>
 
-      <h3>Core Values 💡</h3>
-      <ul style={list}>
-        <li><strong>Innovation:</strong> Harnessing AI and blockchain for real-world water solutions.</li>
-        <li><strong>Transparency:</strong> Ensuring data integrity with on-chain verifications.</li>
-        <li><strong>Sustainability:</strong> Prioritizing ecological balance and resource conservation.</li>
-        <li><strong>Collaboration:</strong> Building bridges between water utilities, AI firms, and stakeholders.</li>
-        <li><strong>Impact:</strong> Driving measurable change in global water and energy use.</li>
+      <h2 style={subheading}>💡 Core Values</h2>
+      <ul>
+        <li><b>Transparency:</b> All data verified on-chain and accessible to stakeholders.</li>
+        <li><b>Sustainability:</b> Prioritizing eco-friendly solutions and water stewardship.</li>
+        <li><b>Innovation:</b> Driving cutting-edge AI and blockchain integration.</li>
+        <li><b>Collaboration:</b> Partnering with global water utilities and AI leaders.</li>
       </ul>
-    </section>
+    </div>
   );
 }
