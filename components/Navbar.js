@@ -1,4 +1,3 @@
-// components/Navbar.js
 export default function Navbar() {
   const nav = {
     display: "flex",
@@ -31,8 +30,8 @@ export default function Navbar() {
       </div>
       <ul style={ul}>
         <li><a href="/" style={link}>Home</a></li>
-        <li><a href="#features" style={link}>Features</a></li>
-        <li><a href="#ranking" style={link}>Ranking</a></li>
+        <li><a href="/features" style={link}>Features</a></li>
+        <li><a href="/ranking" style={link}>Ranking</a></li>
         <li><a href="/about" style={link}>About</a></li>
         <li><a href="/contact" style={link}>Contact</a></li>
       </ul>
