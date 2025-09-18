@@ -1,6 +1,6 @@
 // pages/_app.js
 import Layout from "../components/Layout";
-import "../styles/globals.css"; // اگر استایل داری
+import "../styles/globals.css"; // بعداً درست می‌کنیم
 
 export default function MyApp({ Component, pageProps }) {
   return (
