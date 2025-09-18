@@ -1,8 +1,19 @@
+// pages/index.js
+import Navbar from "../components/Navbar";
+import Hero from "../components/Hero";
+import Features from "../components/Features";
+import Ranking from "../components/Ranking";
+import Footer from "../components/Footer";
+
 export default function Home() {
+  const pageStyle = { background: "#f7fafc", color: "#111827", minHeight: "100vh" };
   return (
-    <div style={{ textAlign: "center", padding: "50px", fontFamily: "Arial" }}>
-      <h1>Welcome to AquraIQ 🌊🤖</h1>
-      <p>AI-powered Water Intelligence Platform</p>
+    <div style={pageStyle}>
+      <Navbar />
+      <Hero />
+      <Features />
+      <Ranking />
+      <Footer />
     </div>
   );
 }
