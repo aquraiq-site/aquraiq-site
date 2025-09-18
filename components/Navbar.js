@@ -1,20 +1,38 @@
 // components/Navbar.js
 export default function Navbar() {
   const nav = {
-    display: "flex", justifyContent: "space-between", alignItems: "center",
-    padding: "16px 32px", background: "#fff", boxShadow: "0 1px 8px rgba(0,0,0,0.06)",
-    position: "sticky", top: 0, zIndex: 20
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "16px 32px",
+    background: "#fff",
+    boxShadow: "0 1px 8px rgba(0,0,0,0.06)",
+    position: "sticky",
+    top: 0,
+    zIndex: 20,
   };
-  const brand = { fontSize: 22, fontWeight: 800, color: "#2563eb" };
+
+  const brand = {
+    display: "flex",
+    alignItems: "center",
+    fontSize: 22,
+    fontWeight: 800,
+    color: "#2563eb",
+  };
+
   const ul = { display: "flex", gap: 20, listStyle: "none", margin: 0, padding: 0 };
   const link = { textDecoration: "none", color: "#374151", fontWeight: 500 };
 
   return (
     <nav style={nav}>
-      <div style={brand}>AquraIQ</div>
+      <div style={brand}>
+        <img src="/logo.png" alt="AquraIQ Logo" style={{ height: "32px", marginRight: "8px" }} />
+        AquraIQ
+      </div>
       <ul style={ul}>
-        <li><a href="/features" style={link}>Features</a></li>
-        <li><a href="/ranking" style={link}>Ranking</a></li>
+        <li><a href="/" style={link}>Home</a></li>
+        <li><a href="#features" style={link}>Features</a></li>
+        <li><a href="#ranking" style={link}>Ranking</a></li>
         <li><a href="/about" style={link}>About</a></li>
         <li><a href="/contact" style={link}>Contact</a></li>
       </ul>
