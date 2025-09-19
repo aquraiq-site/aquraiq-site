@@ -1,48 +1,88 @@
-// components/Navbar.js
+"use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  // Close menu when clicking outside or scrolling
+  useEffect(() => {
+    function onDocPointerDown(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    }
+    function onScroll() {
+      setOpen(false);
+    }
+    document.addEventListener("pointerdown", onDocPointerDown);
+    document.addEventListener("scroll", onScroll, true);
+    return () => {
+      document.removeEventListener("pointerdown", onDocPointerDown);
+      document.removeEventListener("scroll", onScroll, true);
+    };
+  }, []);
 
   return (
-    <nav style={{ display: "flex", justifyContent: "space-between", padding: "15px 40px", background: "#fff", borderBottom: "1px solid #eee" }}>
-      <div>
-        <Link href="/">
-          <a style={{ fontSize: "20px", fontWeight: "bold" }}>🌊 AquraIQ</a>
+    <nav className="bg-white shadow-md overflow-visible">
+      <div className="container mx-auto flex justify-between items-center py-4 px-6">
+        {/* Logo */}
+        <Link href="/" className="text-2xl font-bold text-gray-800 flex items-center">
+          <img src="/logo.png" alt="AquarIQ Logo" className="h-8 w-8 mr-2" />
+          AquralQ
         </Link>
-      </div>
-      <div style={{ display: "flex", gap: "20px", alignItems: "center", position: "relative" }}>
-        <Link href="/"><a>Home</a></Link>
-        <Link href="/features"><a>Features</a></Link>
-        <Link href="/ranking"><a>Ranking</a></Link>
-        <Link href="/about"><a>About</a></Link>
-        <Link href="/contact"><a>Contact</a></Link>
 
-        {/* Dropdown Menu for Members */}
-        <div
-          onMouseEnter={() => setIsOpen(true)}
-          onMouseLeave={() => setIsOpen(false)}
-          style={{ position: "relative" }}
-        >
-          <span style={{ cursor: "pointer" }}>Members ▾</span>
-          {isOpen && (
-            <div
-              style={{
-                position: "absolute",
-                top: "100%",
-                left: 0,
-                background: "#fff",
-                border: "1px solid #ddd",
-                boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-                padding: "10px",
-                zIndex: 10,
-              }}
+        {/* Menu */}
+        <div className="flex space-x-6 items-center">
+          <Link href="/" className="hover:text-blue-500">Home</Link>
+          <Link href="/features" className="hover:text-blue-500">Features</Link>
+          <Link href="/ranking" className="hover:text-blue-500">Ranking</Link>
+          <Link href="/about" className="hover:text-blue-500">About</Link>
+          <Link href="/contact" className="hover:text-blue-500">Contact</Link>
+
+          {/* Members dropdown */}
+          <div
+            ref={menuRef}
+            className="relative"
+            onMouseEnter={() => setOpen(true)}
+            onMouseLeave={() => setOpen(false)}
+          >
+            <button
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded={open}
+              className="hover:text-blue-500 select-none"
+              onClick={() => setOpen((v) => !v)}
             >
-              <Link href="/login"><a style={{ display: "block", padding: "5px 10px" }}>Login</a></Link>
-              <Link href="/register"><a style={{ display: "block", padding: "5px 10px" }}>Register</a></Link>
+              Members ▾
+            </button>
+
+            {/* Dropdown menu */}
+            <div
+              role="menu"
+              className={`absolute right-0 top-full -translate-y-px w-44 rounded-md bg-white text-black shadow-lg ring-1 ring-black/5 z-[60] transition-opacity duration-150 ${
+                open ? "opacity-100 visible" : "opacity-0 invisible"
+              }`}
+            >
+              <Link
+                href="/login"
+                role="menuitem"
+                className="block px-4 py-2 hover:bg-gray-100"
+                onClick={() => setOpen(false)}
+              >
+                Login
+              </Link>
+              <Link
+                href="/register"
+                role="menuitem"
+                className="block px-4 py-2 hover:bg-gray-100"
+                onClick={() => setOpen(false)}
+              >
+                Register
+              </Link>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </nav>
