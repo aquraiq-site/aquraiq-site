@@ -1,17 +1,18 @@
 // pages/contact.js
+
 export default function Contact() {
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto", padding: "40px 20px" }}>
+    <div style={{ padding: "2rem" }}>
       <h1>Get in Touch</h1>
       <p>
-        For partnerships, investments, or inquiries, please reach out using the form below.
+        For partnerships, investments, or inquiries, please contact us using the
+        form below.
       </p>
-
-      <form style={{ display: "flex", flexDirection: "column", gap: "16px", marginTop: "20px" }}>
-        <input type="text" placeholder="Your Name" style={{ padding: "12px", fontSize: "16px" }} />
-        <input type="email" placeholder="Your Email" style={{ padding: "12px", fontSize: "16px" }} />
-        <textarea placeholder="Your Message" rows="5" style={{ padding: "12px", fontSize: "16px" }} />
-        <button type="submit" style={{ background: "#2563eb", color: "#fff", padding: "12px", fontSize: "16px", border: "none", cursor: "pointer" }}>
+      <form style={{ display: "flex", flexDirection: "column", maxWidth: "400px" }}>
+        <input type="text" placeholder="Your Name" style={{ margin: "0.5rem 0", padding: "0.5rem" }} />
+        <input type="email" placeholder="Your Email" style={{ margin: "0.5rem 0", padding: "0.5rem" }} />
+        <textarea placeholder="Your Message" rows="5" style={{ margin: "0.5rem 0", padding: "0.5rem" }} />
+        <button type="submit" style={{ marginTop: "1rem", padding: "0.75rem", background: "#2563eb", color: "#fff", border: "none", cursor: "pointer" }}>
           Send Message
         </button>
       </form>
