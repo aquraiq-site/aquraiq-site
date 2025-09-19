@@ -1,4 +1,3 @@
-// pages/api/register.js
 import { sendEmail } from "../../lib/resend";
 
 export default async function handler(req, res) {
@@ -14,11 +13,11 @@ export default async function handler(req, res) {
   try {
     await sendEmail({
       to: email,
-      subject: "Welcome to AquraIQ",
+      subject: "Welcome to Aquintel",
       html: `
         <h2>Thank you for registering!</h2>
         <p>We’re excited to have you on board.</p>
-        <p>– AquraIQ Team</p>
+        <p>– Aquintel Team</p>
       `,
     });
 
