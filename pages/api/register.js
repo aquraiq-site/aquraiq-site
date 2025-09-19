@@ -17,7 +17,7 @@ export default async function handler(req, res) {
       html: `
         <h2>Thank you for registering!</h2>
         <p>We’re excited to have you on board.</p>
-        <p>– Aquintel Team</p>
+        <p>— Aquintel Team</p>
       `,
     });
 
