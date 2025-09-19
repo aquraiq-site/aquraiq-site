@@ -1,16 +1,17 @@
 import { useState } from "react";
-import { sendEmail } from "../lib/resend"; // Import the Resend helper
 
-export default function Register() {
+export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    membershipType: "Water Company",
-    companyName: "",
+    membership: "",
+    company: "",
     fullName: "",
     email: "",
     country: "",
     username: "",
-    password: ""
+    password: "",
   });
+
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,124 +19,48 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      // Send welcome email to the user
-      await sendEmail({
-        to: formData.email,
-        subject: "Welcome to AquraIQ 🎉",
-        html: `<p>Hello ${formData.fullName},</p>
-               <p>Thanks for registering with <b>AquraIQ</b>. Your account has been created successfully.</p>
-               <p>We will keep you updated on new features and opportunities.</p>`
-      });
 
-      // Send notification email to the admin
-      await sendEmail({
-        to: "info.aquintel@gmail.com", // Replace with your admin email
-        subject: "New Registration on AquraIQ",
-        html: `<p>A new member just registered:</p>
-               <ul>
-                 <li><b>Name:</b> ${formData.fullName}</li>
-                 <li><b>Email:</b> ${formData.email}</li>
-                 <li><b>Company:</b> ${formData.companyName}</li>
-                 <li><b>Country:</b> ${formData.country}</li>
-                 <li><b>Username:</b> ${formData.username}</li>
-               </ul>`
-      });
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
 
-      alert("Registration successful! A confirmation email has been sent.");
-    } catch (error) {
-      console.error("Registration error:", error);
-      alert("Something went wrong. Please try again later.");
+    if (res.ok) {
+      setMessage("✅ Registered successfully!");
+    } else {
+      setMessage("❌ Failed to register.");
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
-
-        <label className="block mb-2 font-medium">Membership Type</label>
-        <select
-          name="membershipType"
-          value={formData.membershipType}
-          onChange={handleChange}
-          className="w-full p-2 mb-4 border rounded-lg"
-        >
-          <option>Water Company</option>
-          <option>AI Company</option>
-          <option>Research Institute</option>
+    <div style={{ maxWidth: "500px", margin: "40px auto", padding: "20px", border: "1px solid #ddd", borderRadius: "10px" }}>
+      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Register</h1>
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+        
+        <select name="membership" value={formData.membership} onChange={handleChange} required>
+          <option value="">Select Membership Type</option>
+          <option value="Water Company">Water Company</option>
+          <option value="AI Company">AI Company</option>
+          <option value="Research Institute">Research Institute</option>
+          <option value="Individual">Individual</option>
         </select>
 
-        <label className="block mb-2 font-medium">Company Name</label>
-        <input
-          type="text"
-          name="companyName"
-          value={formData.companyName}
-          onChange={handleChange}
-          className="w-full p-2 mb-4 border rounded-lg"
-          placeholder="Enter company name"
-        />
+        <input type="text" name="company" placeholder="Company Name" value={formData.company} onChange={handleChange} />
+        <input type="text" name="fullName" placeholder="Full Name" value={formData.fullName} onChange={handleChange} required />
+        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
+        <input type="text" name="country" placeholder="Country" value={formData.country} onChange={handleChange} />
+        <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} required />
+        <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
 
-        <label className="block mb-2 font-medium">Full Name</label>
-        <input
-          type="text"
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleChange}
-          className="w-full p-2 mb-4 border rounded-lg"
-          placeholder="Enter full name"
-        />
-
-        <label className="block mb-2 font-medium">Email</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full p-2 mb-4 border rounded-lg"
-          placeholder="Enter email"
-        />
-
-        <label className="block mb-2 font-medium">Country</label>
-        <input
-          type="text"
-          name="country"
-          value={formData.country}
-          onChange={handleChange}
-          className="w-full p-2 mb-4 border rounded-lg"
-          placeholder="Enter country"
-        />
-
-        <label className="block mb-2 font-medium">Username</label>
-        <input
-          type="text"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          className="w-full p-2 mb-4 border rounded-lg"
-          placeholder="Choose a username"
-        />
-
-        <label className="block mb-2 font-medium">Password</label>
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full p-2 mb-6 border rounded-lg"
-          placeholder="Enter password"
-        />
-
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-        >
+        <button type="submit" style={{ padding: "10px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "5px" }}>
           Register
         </button>
       </form>
+
+      {message && <p style={{ marginTop: "15px", textAlign: "center" }}>{message}</p>}
     </div>
   );
 }
