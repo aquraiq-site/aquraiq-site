@@ -1,35 +1,71 @@
+// components/Navbar.js
 import Link from "next/link";
+import { useState } from "react";
+import Image from "next/image";
 
 export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <nav className="bg-white shadow-md">
-      <div className="container mx-auto flex justify-between items-center py-4 px-6">
-        {/* Logo */}
-        <Link href="/" className="text-2xl font-bold text-gray-800 flex items-center">
-          <img src="/logo.png" alt="AquarIQ Logo" className="h-8 w-8 mr-2" />
-          AquralQ
+    <nav
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "10px 40px",
+        background: "#fff",
+        borderBottom: "1px solid #eee",
+      }}
+    >
+      {/* Logo + Company Name */}
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <Link href="/">
+          <a style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+            <Image
+              src="/logo.png" // مسیر لوگو (باید فایل لوگو رو داخل public/logo.png بذاری)
+              alt="AquraIQ Logo"
+              width={40}
+              height={40}
+            />
+            <span style={{ fontSize: "20px", fontWeight: "bold", marginLeft: "8px", color: "#1a1a1a" }}>
+              AquraIQ
+            </span>
+          </a>
         </Link>
+      </div>
 
-        {/* Menu */}
-        <div className="flex space-x-6 items-center">
-          <Link href="/" className="hover:text-blue-500">Home</Link>
-          <Link href="/features" className="hover:text-blue-500">Features</Link>
-          <Link href="/ranking" className="hover:text-blue-500">Ranking</Link>
-          <Link href="/about" className="hover:text-blue-500">About</Link>
-          <Link href="/contact" className="hover:text-blue-500">Contact</Link>
+      {/* Navigation Links */}
+      <div style={{ display: "flex", gap: "20px", alignItems: "center", position: "relative" }}>
+        <Link href="/"><a>Home</a></Link>
+        <Link href="/features"><a>Features</a></Link>
+        <Link href="/ranking"><a>Ranking</a></Link>
+        <Link href="/about"><a>About</a></Link>
+        <Link href="/contact"><a>Contact</a></Link>
 
-          {/* Members Dropdown */}
-          <div className="relative group">
-            <button className="hover:text-blue-500">Members ▾</button>
-            <div className="absolute left-0 mt-0 w-40 bg-white text-black rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-              <Link href="/login" className="block px-4 py-2 hover:bg-gray-100">
-                Login
-              </Link>
-              <Link href="/register" className="block px-4 py-2 hover:bg-gray-100">
-                Register
-              </Link>
+        {/* Dropdown Menu for Members */}
+        <div
+          onMouseEnter={() => setIsOpen(true)}
+          onMouseLeave={() => setIsOpen(false)}
+          style={{ position: "relative" }}
+        >
+          <span style={{ cursor: "pointer" }}>Members ▾</span>
+          {isOpen && (
+            <div
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                background: "#fff",
+                border: "1px solid #ddd",
+                boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+                padding: "10px",
+                zIndex: 10,
+              }}
+            >
+              <Link href="/login"><a style={{ display: "block", padding: "5px 10px" }}>Login</a></Link>
+              <Link href="/register"><a style={{ display: "block", padding: "5px 10px" }}>Register</a></Link>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </nav>
