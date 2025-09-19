@@ -7,7 +7,7 @@ export default function Register() {
         <form action="#">
           {/* Membership Type */}
           <div className="mb-4">
-            <label className="block text-gray-700 mb-1">Membership Type</label>
+            <label className="block text-gray-700 mb-2">Membership Type</label>
             <select className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400">
               <option>Water Company</option>
               <option>Researcher</option>
@@ -17,7 +17,7 @@ export default function Register() {
 
           {/* Company Name */}
           <div className="mb-4">
-            <label className="block text-gray-700 mb-1">Company Name</label>
+            <label className="block text-gray-700 mb-2">Company Name</label>
             <input
               type="text"
               placeholder="Enter company name"
@@ -27,7 +27,7 @@ export default function Register() {
 
           {/* Full Name */}
           <div className="mb-4">
-            <label className="block text-gray-700 mb-1">Full Name</label>
+            <label className="block text-gray-700 mb-2">Full Name</label>
             <input
               type="text"
               placeholder="Enter full name"
@@ -37,7 +37,7 @@ export default function Register() {
 
           {/* Email */}
           <div className="mb-4">
-            <label className="block text-gray-700 mb-1">Email</label>
+            <label className="block text-gray-700 mb-2">Email</label>
             <input
               type="email"
               placeholder="Enter email"
@@ -47,7 +47,7 @@ export default function Register() {
 
           {/* Country */}
           <div className="mb-4">
-            <label className="block text-gray-700 mb-1">Country</label>
+            <label className="block text-gray-700 mb-2">Country</label>
             <input
               type="text"
               placeholder="Enter country"
@@ -57,7 +57,7 @@ export default function Register() {
 
           {/* Username */}
           <div className="mb-4">
-            <label className="block text-gray-700 mb-1">Username</label>
+            <label className="block text-gray-700 mb-2">Username</label>
             <input
               type="text"
               placeholder="Choose a username"
@@ -67,7 +67,7 @@ export default function Register() {
 
           {/* Password */}
           <div className="mb-6">
-            <label className="block text-gray-700 mb-1">Password</label>
+            <label className="block text-gray-700 mb-2">Password</label>
             <input
               type="password"
               placeholder="Enter password"
