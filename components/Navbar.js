@@ -1,17 +1,40 @@
 // components/Navbar.js
 import Link from "next/link";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav style={{ display: "flex", justifyContent: "space-between", padding: "15px 40px", background: "#fff", borderBottom: "1px solid #eee" }}>
-      <div>
+    <nav
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "10px 40px",
+        background: "#fff",
+        borderBottom: "1px solid #eee",
+      }}
+    >
+      {/* Logo + Company Name */}
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <Link href="/">
-          <a style={{ fontSize: "20px", fontWeight: "bold" }}>🌊 AquraIQ</a>
+          <a style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+            <Image
+              src="/logo.png" // مسیر لوگو (باید فایل لوگو رو داخل public/logo.png بذاری)
+              alt="AquraIQ Logo"
+              width={40}
+              height={40}
+            />
+            <span style={{ fontSize: "20px", fontWeight: "bold", marginLeft: "8px", color: "#1a1a1a" }}>
+              AquraIQ
+            </span>
+          </a>
         </Link>
       </div>
+
+      {/* Navigation Links */}
       <div style={{ display: "flex", gap: "20px", alignItems: "center", position: "relative" }}>
         <Link href="/"><a>Home</a></Link>
         <Link href="/features"><a>Features</a></Link>
