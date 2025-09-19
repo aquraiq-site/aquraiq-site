@@ -1,40 +1,50 @@
+// components/Navbar.js
+import Link from "next/link";
+import { useState } from "react";
+
 export default function Navbar() {
-  const nav = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "16px 32px",
-    background: "#fff",
-    boxShadow: "0 1px 8px rgba(0,0,0,0.06)",
-    position: "sticky",
-    top: 0,
-    zIndex: 20,
-  };
-
-  const brand = {
-    display: "flex",
-    alignItems: "center",
-    fontSize: 22,
-    fontWeight: 800,
-    color: "#2563eb",
-  };
-
-  const ul = { display: "flex", gap: 20, listStyle: "none", margin: 0, padding: 0 };
-  const link = { textDecoration: "none", color: "#374151", fontWeight: 500 };
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav style={nav}>
-      <div style={brand}>
-        <img src="/logo.png" alt="AquraIQ Logo" style={{ height: "32px", marginRight: "8px" }} />
-        AquraIQ
+    <nav style={{ display: "flex", justifyContent: "space-between", padding: "15px 40px", background: "#fff", borderBottom: "1px solid #eee" }}>
+      <div>
+        <Link href="/">
+          <a style={{ fontSize: "20px", fontWeight: "bold" }}>🌊 AquraIQ</a>
+        </Link>
       </div>
-      <ul style={ul}>
-        <li><a href="/" style={link}>Home</a></li>
-        <li><a href="/features" style={link}>Features</a></li>
-        <li><a href="/ranking" style={link}>Ranking</a></li>
-        <li><a href="/about" style={link}>About</a></li>
-        <li><a href="/contact" style={link}>Contact</a></li>
-      </ul>
+      <div style={{ display: "flex", gap: "20px", alignItems: "center", position: "relative" }}>
+        <Link href="/"><a>Home</a></Link>
+        <Link href="/features"><a>Features</a></Link>
+        <Link href="/ranking"><a>Ranking</a></Link>
+        <Link href="/about"><a>About</a></Link>
+        <Link href="/contact"><a>Contact</a></Link>
+
+        {/* Dropdown Menu for Members */}
+        <div
+          onMouseEnter={() => setIsOpen(true)}
+          onMouseLeave={() => setIsOpen(false)}
+          style={{ position: "relative" }}
+        >
+          <span style={{ cursor: "pointer" }}>Members ▾</span>
+          {isOpen && (
+            <div
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                background: "#fff",
+                border: "1px solid #ddd",
+                boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+                padding: "10px",
+                zIndex: 10,
+              }}
+            >
+              <Link href="/login"><a style={{ display: "block", padding: "5px 10px" }}>Login</a></Link>
+              <Link href="/register"><a style={{ display: "block", padding: "5px 10px" }}>Register</a></Link>
+            </div>
+          )}
+        </div>
+      </div>
     </nav>
   );
 }
