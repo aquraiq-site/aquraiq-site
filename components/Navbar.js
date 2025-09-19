@@ -1,86 +1,42 @@
-"use client";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  const menuRef = useRef(null);
-
-  // Close menu when clicking outside or scrolling
-  useEffect(() => {
-    function onDocPointerDown(e) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setOpen(false);
-      }
-    }
-    function onScroll() {
-      setOpen(false);
-    }
-    document.addEventListener("pointerdown", onDocPointerDown);
-    document.addEventListener("scroll", onScroll, true);
-    return () => {
-      document.removeEventListener("pointerdown", onDocPointerDown);
-      document.removeEventListener("scroll", onScroll, true);
-    };
-  }, []);
-
   return (
-    <nav className="bg-white shadow-md overflow-visible">
-      <div className="container mx-auto flex justify-between items-center py-4 px-6">
-        {/* Logo */}
-        <Link href="/" className="text-2xl font-bold text-gray-800 flex items-center">
-          <img src="/logo.png" alt="AquarIQ Logo" className="h-8 w-8 mr-2" />
-          AquralQ
-        </Link>
+    <nav className="bg-white shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          {/* Logo */}
+          <div className="flex-shrink-0 flex items-center">
+            <span className="font-bold text-xl">AquralQ</span>
+          </div>
 
-        {/* Menu */}
-        <div className="flex space-x-6 items-center">
-          <Link href="/" className="hover:text-blue-500">Home</Link>
-          <Link href="/features" className="hover:text-blue-500">Features</Link>
-          <Link href="/ranking" className="hover:text-blue-500">Ranking</Link>
-          <Link href="/about" className="hover:text-blue-500">About</Link>
-          <Link href="/contact" className="hover:text-blue-500">Contact</Link>
+          {/* Links */}
+          <div className="flex space-x-6 items-center">
+            <Link href="/">Home</Link>
+            <Link href="/features">Features</Link>
+            <Link href="/ranking">Ranking</Link>
+            <Link href="/about">About</Link>
+            <Link href="/contact">Contact</Link>
 
-          {/* Members dropdown */}
-          <div
-            ref={menuRef}
-            className="relative"
-            onMouseEnter={() => setOpen(true)}
-            onMouseLeave={() => setOpen(false)}
-          >
-            <button
-              type="button"
-              aria-haspopup="menu"
-              aria-expanded={open}
-              className="hover:text-blue-500 select-none"
-              onClick={() => setOpen((v) => !v)}
-            >
-              Members ▾
-            </button>
-
-            {/* Dropdown menu */}
-            <div
-              role="menu"
-              className={`absolute right-0 top-full -translate-y-px w-44 rounded-md bg-white text-black shadow-lg ring-1 ring-black/5 z-[60] transition-opacity duration-150 ${
-                open ? "opacity-100 visible" : "opacity-0 invisible"
-              }`}
-            >
-              <Link
-                href="/login"
-                role="menuitem"
-                className="block px-4 py-2 hover:bg-gray-100"
-                onClick={() => setOpen(false)}
-              >
-                Login
-              </Link>
-              <Link
-                href="/register"
-                role="menuitem"
-                className="block px-4 py-2 hover:bg-gray-100"
-                onClick={() => setOpen(false)}
-              >
-                Register
-              </Link>
+            {/* Dropdown */}
+            <div className="relative group">
+              <button className="flex items-center text-gray-700 hover:text-black">
+                Members ▾
+              </button>
+              <div className="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-1 w-40 z-50">
+                <Link
+                  href="/login"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Register
+                </Link>
+              </div>
             </div>
           </div>
         </div>
