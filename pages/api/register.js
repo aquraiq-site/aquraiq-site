@@ -2,17 +2,12 @@ import nodemailer from "nodemailer";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ success: false, message: "Method not allowed" });
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { fullName, email, username, password, company, country, membership } = req.body;
-
-  if (!fullName || !email || !username || !password) {
-    return res.status(400).json({ success: false, message: "Required fields are missing" });
-  }
+  const { membershipType, companyName, fullName, email, country, username, password } = req.body;
 
   try {
-    // ✅ Setup transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -21,45 +16,31 @@ export default async function handler(req, res) {
       },
     });
 
-    // ✅ Send confirmation email to user
     await transporter.sendMail({
-      from: `"AquarIQ Registration" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: "Welcome to AquarIQ 🎉",
-      text: `Hello ${fullName},
-
-Thank you for registering with AquarIQ. Your account has been created successfully.
-
-Username: ${username}
-Membership: ${membership}
-Company: ${company || "N/A"}
-Country: ${country || "N/A"}
-
-We are excited to have you onboard!
-
-- AquarIQ Team
-`,
+      from: process.env.EMAIL_USER,
+      to: email, // confirmation email to user
+      subject: "Welcome to AquarIQ!",
+      text: `Hello ${fullName},\n\nThank you for registering at AquarIQ.\n\nYour username: ${username}\nMembership: ${membershipType}\n\nWe are glad to have you!\n\n-AquarIQ Team`,
     });
 
-    // ✅ Send notification email to admin/company
+    // Also notify admin/company email
     await transporter.sendMail({
-      from: `"AquarIQ Registration" <${process.env.EMAIL_USER}>`,
+      from: process.env.EMAIL_USER,
       to: process.env.COMPANY_EMAIL,
-      subject: "New User Registered",
-      text: `A new user has registered:
-
-Full Name: ${fullName}
-Email: ${email}
-Username: ${username}
-Membership: ${membership}
-Company: ${company || "N/A"}
-Country: ${country || "N/A"}
-`,
+      subject: `New Registration: ${fullName}`,
+      text: `
+        Name: ${fullName}
+        Email: ${email}
+        Username: ${username}
+        Membership: ${membershipType}
+        Company: ${companyName}
+        Country: ${country}
+      `,
     });
 
-    return res.status(200).json({ success: true, message: "Registration successful and email sent" });
+    return res.status(200).json({ success: true, message: "Registration successful and emails sent" });
   } catch (error) {
     console.error("Registration error:", error);
-    return res.status(500).json({ success: false, message: "Something went wrong" });
+    return res.status(500).json({ error: error.message || "Something went wrong" });
   }
 }
