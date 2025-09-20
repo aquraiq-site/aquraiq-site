@@ -1,4 +1,15 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
+import { Pool } from "pg"; // برای Postgres
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+// اتصال به دیتابیس Postgres (Vercel Postgres)
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL, 
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -8,39 +19,27 @@ export default async function handler(req, res) {
   const { membershipType, companyName, fullName, email, country, username, password } = req.body;
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
+    // ذخیره در دیتابیس
+    const client = await pool.connect();
+    await client.query(
+      `INSERT INTO users (membership_type, company_name, full_name, email, country, username, password)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [membershipType, companyName, fullName, email, country, username, password]
+    );
+    client.release();
+
+    // ارسال ایمیل تأیید
+    await resend.emails.send({
+      from: "noreply@aquariq.com",
+      to: email,
+      subject: "Confirm your registration",
+      html: `<p>Hello ${fullName},</p><p>Thank you for registering with AquarIQ. Please confirm your email.</p>`,
     });
 
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email, // confirmation email to user
-      subject: "Welcome to AquarIQ!",
-      text: `Hello ${fullName},\n\nThank you for registering at AquarIQ.\n\nYour username: ${username}\nMembership: ${membershipType}\n\nWe are glad to have you!\n\n-AquarIQ Team`,
-    });
+    res.status(200).json({ success: true, message: "User registered and confirmation email sent!" });
 
-    // Also notify admin/company email
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.COMPANY_EMAIL,
-      subject: `New Registration: ${fullName}`,
-      text: `
-        Name: ${fullName}
-        Email: ${email}
-        Username: ${username}
-        Membership: ${membershipType}
-        Company: ${companyName}
-        Country: ${country}
-      `,
-    });
-
-    return res.status(200).json({ success: true, message: "Registration successful and emails sent" });
   } catch (error) {
     console.error("Registration error:", error);
-    return res.status(500).json({ error: error.message || "Something went wrong" });
+    res.status(500).json({ success: false, error: error.message });
   }
 }
