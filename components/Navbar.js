@@ -1,7 +1,10 @@
 // components/Navbar.js
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Navbar() {
+  const [open, setOpen] = useState(false);
+
   return (
     <nav className="bg-white shadow-md">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
@@ -12,7 +15,7 @@ export default function Navbar() {
         </Link>
 
         {/* Menu */}
-        <div className="flex space-x-6">
+        <div className="flex space-x-6 items-center">
           <Link href="/" className="hover:text-blue-600">Home</Link>
           <Link href="/features" className="hover:text-blue-600">Features</Link>
           <Link href="/ranking" className="hover:text-blue-600">Ranking</Link>
@@ -20,26 +23,24 @@ export default function Navbar() {
           <Link href="/contact" className="hover:text-blue-600">Contact</Link>
 
           {/* Members Dropdown */}
-          <div className="relative group">
+          <div
+            className="relative"
+            onMouseEnter={() => setOpen(true)}
+            onMouseLeave={() => setOpen(false)}
+          >
             <button className="hover:text-blue-600 flex items-center">
               Members ▾
             </button>
-            <div className="absolute hidden group-hover:block bg-white shadow-md mt-2 rounded-lg w-32 z-50"
-                 onMouseEnter={(e) => e.currentTarget.classList.remove("hidden")}
-                 onMouseLeave={(e) => e.currentTarget.classList.add("hidden")}>
-              <Link
-                href="/login"
-                className="block px-4 py-2 hover:bg-gray-100"
-              >
-                Login
-              </Link>
-              <Link
-                href="/register"
-                className="block px-4 py-2 hover:bg-gray-100"
-              >
-                Register
-              </Link>
-            </div>
+            {open && (
+              <div className="absolute bg-white shadow-md mt-2 rounded-lg w-32 z-50">
+                <Link href="/login" className="block px-4 py-2 hover:bg-gray-100">
+                  Login
+                </Link>
+                <Link href="/register" className="block px-4 py-2 hover:bg-gray-100">
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
