@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     const result = await pool.query("SELECT NOW()");
     res.status(200).json({ success: true, time: result.rows[0] });
   } catch (error) {
-    console.error(error);
+    console.error("Database connection error:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 }
