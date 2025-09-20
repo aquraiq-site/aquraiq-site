@@ -1,66 +1,111 @@
-import { useState } from "react";
-
-export default function RegisterPage() {
-  const [formData, setFormData] = useState({
-    membership: "",
-    company: "",
-    fullName: "",
-    email: "",
-    country: "",
-    username: "",
-    password: "",
-  });
-
-  const [message, setMessage] = useState("");
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-
-    if (res.ok) {
-      setMessage("✅ Registered successfully!");
-    } else {
-      setMessage("❌ Failed to register.");
-    }
-  };
-
+export default function Register() {
   return (
-    <div style={{ maxWidth: "500px", margin: "40px auto", padding: "20px", border: "1px solid #ddd", borderRadius: "10px" }}>
-      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Register</h1>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-        
-        <select name="membership" value={formData.membership} onChange={handleChange} required>
-          <option value="">Select Membership Type</option>
-          <option value="Water Company">Water Company</option>
-          <option value="AI Company">AI Company</option>
-          <option value="Research Institute">Research Institute</option>
-          <option value="Individual">Individual</option>
-        </select>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
+      <div className="bg-white shadow-2xl rounded-2xl w-full max-w-2xl p-8 md:p-12">
+        {/* Title */}
+        <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-2">
+          Create Your Account
+        </h2>
+        <p className="text-center text-gray-500 mb-8">
+          Join AquarIQ and explore AI-powered water intelligence
+        </p>
 
-        <input type="text" name="company" placeholder="Company Name" value={formData.company} onChange={handleChange} />
-        <input type="text" name="fullName" placeholder="Full Name" value={formData.fullName} onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-        <input type="text" name="country" placeholder="Country" value={formData.country} onChange={handleChange} />
-        <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
+        {/* Form */}
+        <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Membership Type */}
+          <div className="md:col-span-2">
+            <label className="block text-gray-700 font-medium mb-2">
+              Select Membership Type
+            </label>
+            <select className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              <option>Company</option>
+              <option>Individual</option>
+            </select>
+          </div>
 
-        <button type="submit" style={{ padding: "10px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "5px" }}>
-          Register
-        </button>
-      </form>
+          {/* Company Name */}
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">
+              Company Name
+            </label>
+            <input
+              type="text"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter company name"
+            />
+          </div>
 
-      {message && <p style={{ marginTop: "15px", textAlign: "center" }}>{message}</p>}
+          {/* Full Name */}
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">
+              Full Name
+            </label>
+            <input
+              type="text"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your full name"
+            />
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="you@example.com"
+            />
+          </div>
+
+          {/* Country */}
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">
+              Country
+            </label>
+            <input
+              type="text"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter country"
+            />
+          </div>
+
+          {/* Username */}
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">
+              Username
+            </label>
+            <input
+              type="text"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Choose a username"
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="••••••••"
+            />
+          </div>
+
+          {/* Register Button */}
+          <div className="md:col-span-2">
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white font-semibold rounded-lg px-4 py-3 hover:bg-blue-700 transition duration-300 shadow-md"
+            >
+              Register
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
