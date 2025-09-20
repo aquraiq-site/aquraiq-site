@@ -2,9 +2,10 @@ import nodemailer from "nodemailer";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { email, username, fullName, company, country, membershipType } = req.body;
+    const { email, subject, message } = req.body;
 
     try {
+      // Gmail transporter with App Password
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -13,28 +14,21 @@ export default async function handler(req, res) {
         },
       });
 
-      // Send email to user
+      // Send the email
       await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: "Welcome to AquarIQ!",
-        text: `Hello ${fullName}, thank you for registering as ${membershipType}.`,
+        from: `"AquarIQ" <${process.env.EMAIL_USER}>`,
+        to: email, // recipient
+        subject: subject || "Welcome to AquarIQ",
+        text: message || "Thank you for registering with AquarIQ!",
+        html: `<p>${message || "Thank you for registering with AquarIQ!"}</p>`,
       });
 
-      // Send copy to company
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: process.env.COMPANY_EMAIL,
-        subject: "New Registration on AquarIQ",
-        text: `New user registered: ${fullName} (${email}) from ${company}, ${country}`,
-      });
-
-      res.status(200).json({ message: "Registration email sent successfully" });
+      return res.status(200).json({ success: true });
     } catch (error) {
       console.error("Email error:", error);
-      res.status(500).json({ error: "Failed to send email" });
+      return res.status(500).json({ success: false, error: error.message });
     }
   } else {
-    res.status(405).json({ error: "Method not allowed" });
+    res.status(405).json({ message: "Method not allowed" });
   }
 }
