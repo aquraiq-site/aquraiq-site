@@ -15,39 +15,45 @@ export default function Navbar() {
         </Link>
 
         {/* Menu */}
-        <div className="flex space-x-6">
-          <Link href="/" className="hover:text-blue-600">Home</Link>
-          <Link href="/features" className="hover:text-blue-600">Features</Link>
-          <Link href="/ranking" className="hover:text-blue-600">Ranking</Link>
-          <Link href="/about" className="hover:text-blue-600">About</Link>
-          <Link href="/contact" className="hover:text-blue-600">Contact</Link>
+        <div className="flex space-x-6 items-center">
+          <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
+          <Link href="/features" className="hover:text-blue-600 transition-colors">Features</Link>
+          <Link href="/ranking" className="hover:text-blue-600 transition-colors">Ranking</Link>
+          <Link href="/about" className="hover:text-blue-600 transition-colors">About</Link>
+          <Link href="/contact" className="hover:text-blue-600 transition-colors">Contact</Link>
 
           {/* Members Dropdown */}
           <div className="relative">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="hover:text-blue-600 focus:outline-none"
+              className="hover:text-blue-600 focus:outline-none flex items-center"
             >
               Members ▾
             </button>
-            {isOpen && (
-              <div className="absolute right-0 bg-white shadow-md mt-2 rounded-lg w-32 z-50">
-                <Link
-                  href="/login"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Login
-                </Link>
-                <Link
-                  href="/register"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Register
-                </Link>
-              </div>
-            )}
+
+            {/* Dropdown Menu */}
+            <div
+              className={`absolute right-0 mt-2 w-36 bg-white shadow-md rounded-lg overflow-hidden transform transition-all duration-200 origin-top-right z-50 ${
+                isOpen
+                  ? "opacity-100 scale-100"
+                  : "opacity-0 scale-95 pointer-events-none"
+              }`}
+            >
+              <Link
+                href="/login"
+                className="block px-4 py-2 hover:bg-gray-100 transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Login
+              </Link>
+              <Link
+                href="/register"
+                className="block px-4 py-2 hover:bg-gray-100 transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Register
+              </Link>
+            </div>
           </div>
         </div>
       </div>
