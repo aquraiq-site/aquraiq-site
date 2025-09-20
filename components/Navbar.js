@@ -29,27 +29,6 @@ export default function Layout({ children }) {
             <Link href="/contact" className="hover:text-blue-600">
               Contact
             </Link>
-
-            {/* Members Dropdown */}
-            <div className="relative group">
-              <button className="hover:text-blue-600 px-3 py-2">
-                Members ▾
-              </button>
-              <div className="absolute right-0 mt-2 hidden group-hover:block bg-white shadow-md rounded-lg w-40 z-50">
-                <Link
-                  href="/login"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                >
-                  Login
-                </Link>
-                <Link
-                  href="/register"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                >
-                  Register
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </nav>
