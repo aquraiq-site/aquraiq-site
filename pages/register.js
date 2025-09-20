@@ -2,17 +2,16 @@ import { useState } from "react";
 
 export default function Register() {
   const [form, setForm] = useState({
-    membershipType: "Individual",
-    companyName: "",
-    fullName: "",
+    membership_type: "",
+    company_name: "",
+    full_name: "",
     email: "",
     country: "",
     username: "",
     password: "",
   });
 
-  const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState(null);
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -20,75 +19,54 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setStatus(null);
 
     try {
       const res = await fetch("/api/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(form),
       });
 
       const data = await res.json();
-      if (res.ok) {
-        setStatus({ type: "success", message: "Registration successful! Check your email." });
-        setForm({
-          membershipType: "Individual",
-          companyName: "",
-          fullName: "",
-          email: "",
-          country: "",
-          username: "",
-          password: "",
-        });
+      if (data.success) {
+        setMessage("User registered successfully!");
       } else {
-        setStatus({ type: "error", message: data.error || "Something went wrong" });
+        setMessage("Error: " + data.error);
       }
-    } catch (error) {
-      setStatus({ type: "error", message: error.message });
+    } catch (err) {
+      setMessage("Something went wrong.");
     }
-
-    setLoading(false);
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center">Create Your Account</h2>
-
-        <select
-          name="membershipType"
-          value={form.membershipType}
-          onChange={handleChange}
-          className="w-full mb-4 p-3 border rounded-lg"
-        >
-          <option value="Individual">Individual</option>
-          <option value="Company">Company</option>
-        </select>
-
+    <div style={{ maxWidth: "500px", margin: "auto", padding: "20px" }}>
+      <h2>Register</h2>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
-          name="companyName"
-          placeholder="Company Name"
-          value={form.companyName}
-          onChange={handleChange}
-          className="w-full mb-4 p-3 border rounded-lg"
-        />
-
-        <input
-          type="text"
-          name="fullName"
-          placeholder="Full Name"
-          value={form.fullName}
+          name="membership_type"
+          placeholder="Membership Type"
+          value={form.membership_type}
           onChange={handleChange}
           required
-          className="w-full mb-4 p-3 border rounded-lg"
         />
-
+        <input
+          type="text"
+          name="company_name"
+          placeholder="Company Name"
+          value={form.company_name}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="full_name"
+          placeholder="Full Name"
+          value={form.full_name}
+          onChange={handleChange}
+          required
+        />
         <input
           type="email"
           name="email"
@@ -96,19 +74,14 @@ export default function Register() {
           value={form.email}
           onChange={handleChange}
           required
-          className="w-full mb-4 p-3 border rounded-lg"
         />
-
         <input
           type="text"
           name="country"
           placeholder="Country"
           value={form.country}
           onChange={handleChange}
-          required
-          className="w-full mb-4 p-3 border rounded-lg"
         />
-
         <input
           type="text"
           name="username"
@@ -116,9 +89,7 @@ export default function Register() {
           value={form.username}
           onChange={handleChange}
           required
-          className="w-full mb-4 p-3 border rounded-lg"
         />
-
         <input
           type="password"
           name="password"
@@ -126,27 +97,10 @@ export default function Register() {
           value={form.password}
           onChange={handleChange}
           required
-          className="w-full mb-6 p-3 border rounded-lg"
         />
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
-        >
-          {loading ? "Registering..." : "Register"}
-        </button>
-
-        {status && (
-          <p
-            className={`mt-4 text-center font-medium ${
-              status.type === "success" ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {status.message}
-          </p>
-        )}
+        <button type="submit">Register</button>
       </form>
+      {message && <p>{message}</p>}
     </div>
   );
 }
