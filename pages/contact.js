@@ -1,90 +1,95 @@
 import { useState } from "react";
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(null);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setStatus(null);
 
     try {
-      const res = await fetch("/api/sendEmail", {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(form),
       });
 
       const data = await res.json();
-      alert(data.message);
-    } catch (err) {
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+      if (res.ok) {
+        setStatus({ type: "success", message: data.message });
+        setForm({ name: "", email: "", message: "" });
+      } else {
+        setStatus({ type: "error", message: data.error || "Failed to send email" });
+      }
+    } catch (error) {
+      setStatus({ type: "error", message: error.message });
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex justify-center items-center min-h-screen bg-gray-50">
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-xl p-8 w-full max-w-lg"
+        className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Contact Us</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Contact Us</h2>
 
         <input
           type="text"
           name="name"
           placeholder="Your Name"
-          value={formData.name}
+          value={form.name}
           onChange={handleChange}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
+          className="w-full mb-4 p-3 border rounded-lg"
         />
 
         <input
           type="email"
           name="email"
           placeholder="Your Email"
-          value={formData.email}
+          value={form.email}
           onChange={handleChange}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
+          className="w-full mb-4 p-3 border rounded-lg"
         />
 
         <textarea
           name="message"
           placeholder="Your Message"
-          value={formData.message}
+          value={form.message}
           onChange={handleChange}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          rows="5"
           required
-        ></textarea>
+          rows="4"
+          className="w-full mb-4 p-3 border rounded-lg"
+        />
 
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-3 rounded-lg font-semibold text-white ${
-            loading
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700 transition"
-          }`}
+          className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
         >
           {loading ? "Sending..." : "Send Message"}
         </button>
+
+        {status && (
+          <p
+            className={`mt-4 text-center font-medium ${
+              status.type === "success" ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {status.message}
+          </p>
+        )}
       </form>
     </div>
   );
