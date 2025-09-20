@@ -1,62 +1,40 @@
-import { useState } from "react";
+import nodemailer from "nodemailer";
 
-export default function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState("");
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setStatus("Sending...");
+export default async function handler(req, res) {
+  if (req.method === "POST") {
+    const { name, email, subject, message } = req.body;
 
     try {
-      const res = await fetch("/api/sendEmail", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+      // Gmail transporter with App Password
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
       });
 
-      const data = await res.json();
-      if (data.success) {
-        setStatus("✅ Email sent successfully!");
-      } else {
-        setStatus("❌ Failed to send email.");
-      }
-    } catch (error) {
-      setStatus("⚠️ Error sending email.");
-    }
-  };
+      // Send email to company email
+      await transporter.sendMail({
+        from: `"${name}" <${email}>`,
+        to: process.env.COMPANY_EMAIL, // recipient is your company email
+        subject: subject || "New Contact Form Submission",
+        text: message,
+        html: `
+          <h3>New Contact Message</h3>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Message:</strong></p>
+          <p>${message}</p>
+        `,
+      });
 
-  return (
-    <div style={{ maxWidth: "500px", margin: "auto", padding: "20px" }}>
-      <h1>Contact Us</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Your Name"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Your Email"
-          onChange={handleChange}
-          required
-        />
-        <textarea
-          name="message"
-          placeholder="Your Message"
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Send</button>
-      </form>
-      <p>{status}</p>
-    </div>
-  );
+      return res.status(200).json({ success: true });
+    } catch (error) {
+      console.error("Email error:", error);
+      return res.status(500).json({ success: false, error: error.message });
+    }
+  } else {
+    res.status(405).json({ message: "Method not allowed" });
+  }
 }
