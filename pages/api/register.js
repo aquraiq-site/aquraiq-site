@@ -1,49 +1,65 @@
-// pages/api/register.js
+import nodemailer from "nodemailer";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Only POST requests allowed" });
+    return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
-  const { membershipType, companyName, fullName, email, country, username, password } = req.body;
+  const { fullName, email, username, password, company, country, membership } = req.body;
 
-  if (!membershipType || !fullName || !email || !username || !password) {
-    return res.status(400).json({ error: "Missing required fields" });
+  if (!fullName || !email || !username || !password) {
+    return res.status(400).json({ success: false, message: "Required fields are missing" });
   }
 
   try {
-    // --- Save user to database (future step) ---
-    // For now, just mock a success
-    console.log("New user registered:", {
-      membershipType,
-      companyName,
-      fullName,
-      email,
-      country,
-      username
+    // ✅ Setup transporter
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
     });
 
-    // --- Send confirmation email ---
-    const emailResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/sendEmail`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        to: email,
-        subject: "Welcome to AquarIQ 🚀",
-        message: `Hello ${fullName},\n\nThank you for registering with AquarIQ!\n\nWe are excited to have you join us and explore AI-powered water intelligence.\n\n- The AquarIQ Team`
-      })
+    // ✅ Send confirmation email to user
+    await transporter.sendMail({
+      from: `"AquarIQ Registration" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Welcome to AquarIQ 🎉",
+      text: `Hello ${fullName},
+
+Thank you for registering with AquarIQ. Your account has been created successfully.
+
+Username: ${username}
+Membership: ${membership}
+Company: ${company || "N/A"}
+Country: ${country || "N/A"}
+
+We are excited to have you onboard!
+
+- AquarIQ Team
+`,
     });
 
-    const emailResult = await emailResponse.json();
+    // ✅ Send notification email to admin/company
+    await transporter.sendMail({
+      from: `"AquarIQ Registration" <${process.env.EMAIL_USER}>`,
+      to: process.env.COMPANY_EMAIL,
+      subject: "New User Registered",
+      text: `A new user has registered:
 
-    if (!emailResponse.ok) {
-      return res.status(500).json({ error: "User registered but email failed", details: emailResult });
-    }
+Full Name: ${fullName}
+Email: ${email}
+Username: ${username}
+Membership: ${membership}
+Company: ${company || "N/A"}
+Country: ${country || "N/A"}
+`,
+    });
 
-    return res.status(201).json({ success: true, message: "User registered and email sent!" });
-
+    return res.status(200).json({ success: true, message: "Registration successful and email sent" });
   } catch (error) {
-    console.error("Register error:", error);
-    return res.status(500).json({ error: "Registration failed", details: error.message });
+    console.error("Registration error:", error);
+    return res.status(500).json({ success: false, message: "Something went wrong" });
   }
 }
