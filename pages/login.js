@@ -17,7 +17,7 @@ export default function Login() {
     try {
       // Send notification email to admin
       await sendEmail({
-        to: "info.aquintel@gmail.com", // Replace with your admin email
+        to: "aquraiq@gmail.com", // Replace with your admin email
         subject: "New Login Detected on AquraIQ",
         html: `<p>User just logged in:</p>
                <ul>
