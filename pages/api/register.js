@@ -1,49 +1,13 @@
-import pool from "@/lib/db";
+// pages/api/register.js
+import { query } from "@/lib/db";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({
-      success: false,
-      message: "Method not allowed. Please use POST.",
-    });
-  }
-
-  const {
-    membership_type,
-    company_name,
-    full_name,
-    email,
-    country,
-    username,
-    password,
-  } = req.body;
-
-  // Check required fields
-  if (
-    !membership_type ||
-    !company_name ||
-    !full_name ||
-    !email ||
-    !country ||
-    !username ||
-    !password
-  ) {
-    return res.status(400).json({
-      success: false,
-      message: "All fields are required.",
-    });
+    return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
   try {
-    const client = await pool.connect();
-
-    const insertQuery = `
-      INSERT INTO users (membership_type, company_name, full_name, email, country, username, password)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      RETURNING id, email, username
-    `;
-
-    const values = [
+    const {
       membership_type,
       company_name,
       full_name,
@@ -51,19 +15,28 @@ export default async function handler(req, res) {
       country,
       username,
       password,
-    ];
+    } = req.body;
 
-    const result = await client.query(insertQuery, values);
-    client.release();
+    // validation
+    if (!membership_type || !company_name || !full_name || !email || !country || !username || !password) {
+      return res.status(400).json({ success: false, message: "All fields are required" });
+    }
 
-    return res.status(201).json({
+    // insert into database
+    const result = await query(
+      `INSERT INTO users (membership_type, company_name, full_name, email, country, username, password)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id`,
+      [membership_type, company_name, full_name, email, country, username, password]
+    );
+
+    return res.status(200).json({
       success: true,
-      message: "User registered successfully.",
-      user: result.rows[0],
+      message: "User registered successfully",
+      userId: result.rows[0].id,
     });
   } catch (err) {
     console.error("DB error:", err);
-
     return res.status(500).json({
       success: false,
       message: "Database connection failed. Please check your credentials.",
