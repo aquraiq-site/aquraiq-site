@@ -6,15 +6,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const {
-      companyType,   // از فرم
-      companyName,
-      fullName,
-      email,
-      country,
-      username,
-      password,
-    } = req.body;
+    const { companyType, companyName, fullName, email, country, username, password } = req.body;
 
     if (!companyType || !companyName || !fullName || !email || !country || !username || !password) {
       return res.status(400).json({ success: false, message: 'All fields are required' });
@@ -29,14 +21,13 @@ export default async function handler(req, res) {
 
     const result = await pool.query(query, values);
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
-      message: 'User registered successfully ✅',
+      message: 'User registered successfully',
       userId: result.rows[0].id,
     });
-
   } catch (err) {
     console.error('DB error:', err);
-    return res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({ success: false, message: err.message });
   }
 }
