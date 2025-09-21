@@ -1,148 +1,152 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 export default function Register() {
-  const [form, setForm] = useState({
-    membership_type: "",
-    company_name: "",
-    full_name: "",
-    email: "",
-    country: "",
-    username: "",
-    password: "",
+  const [formData, setFormData] = useState({
+    companyType: '',
+    companyName: '',
+    fullName: '',
+    email: '',
+    country: '',
+    username: '',
+    password: '',
   });
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
+    setFormData({
+      ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("Registering...");
 
-    try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
 
-      const data = await res.json();
-      if (data.success) {
-        setMessage("✅ Registered successfully!");
-      } else {
-        setMessage("❌ " + data.message);
-      }
-    } catch (err) {
-      setMessage("⚠️ Error: " + err.message);
+    const data = await res.json();
+    if (data.success) {
+      setMessage('✅ ثبت‌نام با موفقیت انجام شد');
+    } else {
+      setMessage(`❌ خطا: ${data.message}`);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md"
+      >
+        <h2 className="text-2xl font-bold mb-6 text-center">
           Register to <span className="text-blue-600">AquarIQ</span>
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Membership type */}
-          <select
-            name="membership_type"
-            value={form.membership_type}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-            required
-          >
-            <option value="">Select Company Type...</option>
-            <option value="AI Company">AI Company</option>
-            <option value="Water Company">Water Company</option>
-            <option value="Individual">Individual</option>
-          </select>
+        {/* Company Type */}
+        <label className="block mb-2 font-medium">Company Type</label>
+        <select
+          name="companyType"
+          value={formData.companyType}
+          onChange={handleChange}
+          className="w-full mb-4 p-2 border rounded-md"
+          required
+        >
+          <option value="">Select type...</option>
+          <option value="AI Company">AI Company</option>
+          <option value="Water Company">Water Company</option>
+          <option value="Individual">Individual</option>
+        </select>
 
-          {/* Company Name */}
-          <input
-            type="text"
-            name="company_name"
-            placeholder="e.g. ASU"
-            value={form.company_name}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-            required
-          />
+        {/* Company Name */}
+        <label className="block mb-2 font-medium">Company Name</label>
+        <input
+          type="text"
+          name="companyName"
+          placeholder="e.g. ASU"
+          value={formData.companyName}
+          onChange={handleChange}
+          className="w-full mb-4 p-2 border rounded-md"
+          required
+        />
 
-          {/* Full Name */}
-          <input
-            type="text"
-            name="full_name"
-            placeholder="e.g. Amin Mojiri"
-            value={form.full_name}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-            required
-          />
+        {/* Full Name */}
+        <label className="block mb-2 font-medium">Full Name</label>
+        <input
+          type="text"
+          name="fullName"
+          placeholder="e.g. Amin Mojiri"
+          value={formData.fullName}
+          onChange={handleChange}
+          className="w-full mb-4 p-2 border rounded-md"
+          required
+        />
 
-          {/* Email */}
-          <input
-            type="email"
-            name="email"
-            placeholder="you@example.com"
-            value={form.email}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-            required
-          />
+        {/* Email */}
+        <label className="block mb-2 font-medium">Email</label>
+        <input
+          type="email"
+          name="email"
+          placeholder="you@example.com"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full mb-4 p-2 border rounded-md"
+          required
+        />
 
-          {/* Country */}
-          <input
-            type="text"
-            name="country"
-            placeholder="e.g. USA"
-            value={form.country}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-            required
-          />
+        {/* Country */}
+        <label className="block mb-2 font-medium">Country</label>
+        <input
+          type="text"
+          name="country"
+          placeholder="e.g. USA"
+          value={formData.country}
+          onChange={handleChange}
+          className="w-full mb-4 p-2 border rounded-md"
+          required
+        />
 
-          {/* Username */}
-          <input
-            type="text"
-            name="username"
-            placeholder="Choose a username"
-            value={form.username}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-            required
-          />
+        {/* Username */}
+        <label className="block mb-2 font-medium">Username</label>
+        <input
+          type="text"
+          name="username"
+          placeholder="Choose a username"
+          value={formData.username}
+          onChange={handleChange}
+          className="w-full mb-4 p-2 border rounded-md"
+          required
+        />
 
-          {/* Password */}
-          <input
-            type="password"
-            name="password"
-            placeholder="********"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-            required
-          />
+        {/* Password */}
+        <label className="block mb-2 font-medium">Password</label>
+        <input
+          type="password"
+          name="password"
+          placeholder="********"
+          value={formData.password}
+          onChange={handleChange}
+          className="w-full mb-6 p-2 border rounded-md"
+          required
+        />
 
-          {/* Submit */}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-          >
-            Register
-          </button>
-        </form>
+        {/* Submit */}
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+        >
+          Register
+        </button>
 
+        {/* Message */}
         {message && (
-          <p className="mt-4 text-center text-sm text-gray-600">{message}</p>
+          <p className="mt-4 text-center text-sm text-red-600">{message}</p>
         )}
-      </div>
+      </form>
     </div>
   );
 }
