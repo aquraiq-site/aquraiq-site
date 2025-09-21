@@ -1,4 +1,3 @@
-// pages/api/register.js
 import pool from '../../lib/db';
 
 export default async function handler(req, res) {
@@ -7,21 +6,21 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { companyType, companyName, fullName, email, country, username, password } = req.body;
+    const { membership_type, company_name, full_name, email, country, username, password } = req.body;
 
-    // بررسی فیلدها
-    if (!companyType || !companyName || !fullName || !email || !country || !username || !password) {
+    // چک کردن پر بودن همه فیلدها
+    if (!membership_type || !company_name || !full_name || !email || !country || !username || !password) {
       return res.status(400).json({ success: false, message: 'All fields are required' });
     }
 
-    // دستور SQL برای درج در جدول users
+    // کوئری اینسرت در جدول users
     const query = `
       INSERT INTO users (membership_type, company_name, full_name, email, country, username, password)
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING id
     `;
-    const values = [companyType, companyName, fullName, email, country, username, password];
 
+    const values = [membership_type, company_name, full_name, email, country, username, password];
     const result = await pool.query(query, values);
 
     res.status(200).json({
@@ -30,7 +29,7 @@ export default async function handler(req, res) {
       userId: result.rows[0].id,
     });
   } catch (err) {
-    console.error('DB error:', err);
-    res.status(500).json({ success: false, message: err.message });
+    console.error('DB error:', err.message);
+    res.status(500).json({ success: false, message: 'Server error: ' + err.message });
   }
 }
