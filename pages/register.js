@@ -1,17 +1,18 @@
-import { useState } from 'react';
+// pages/register.js
+import { useState } from "react";
 
 export default function Register() {
   const [formData, setFormData] = useState({
-    companyType: '',
-    companyName: '',
-    fullName: '',
-    email: '',
-    country: '',
-    username: '',
-    password: '',
+    membership_type: "",
+    company_name: "",
+    full_name: "",
+    email: "",
+    country: "",
+    username: "",
+    password: "",
   });
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
     setFormData({
@@ -23,128 +24,133 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await res.json();
-    if (data.success) {
-      setMessage('✅ ثبت‌نام با موفقیت انجام شد');
-    } else {
-      setMessage(`❌ خطا: ${data.message}`);
+      const data = await res.json();
+
+      if (data.success) {
+        setMessage("✅ Registration successful!");
+      } else {
+        setMessage("❌ " + data.message);
+      }
+    } catch (err) {
+      setMessage("❌ Something went wrong. Please try again.");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div style={{ display: "flex", justifyContent: "center", marginTop: "40px" }}>
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md"
+        style={{
+          width: "400px",
+          padding: "20px",
+          border: "1px solid #ddd",
+          borderRadius: "10px",
+          background: "#fff",
+        }}
       >
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          Register to <span className="text-blue-600">AquarIQ</span>
+        <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
+          Register to <span style={{ color: "blue" }}>AquarIQ</span>
         </h2>
 
-        {/* Company Type */}
-        <label className="block mb-2 font-medium">Company Type</label>
+        <label>Company Type</label>
         <select
-          name="companyType"
-          value={formData.companyType}
+          name="membership_type"
+          value={formData.membership_type}
           onChange={handleChange}
-          className="w-full mb-4 p-2 border rounded-md"
           required
+          style={{ width: "100%", marginBottom: "10px" }}
         >
-          <option value="">Select type...</option>
+          <option value="">Select...</option>
+          <option value="Basic">Basic</option>
+          <option value="Pro">Pro</option>
           <option value="AI Company">AI Company</option>
-          <option value="Water Company">Water Company</option>
-          <option value="Individual">Individual</option>
         </select>
 
-        {/* Company Name */}
-        <label className="block mb-2 font-medium">Company Name</label>
+        <label>Company Name</label>
         <input
           type="text"
-          name="companyName"
-          placeholder="e.g. ASU"
-          value={formData.companyName}
+          name="company_name"
+          value={formData.company_name}
           onChange={handleChange}
-          className="w-full mb-4 p-2 border rounded-md"
           required
+          style={{ width: "100%", marginBottom: "10px" }}
         />
 
-        {/* Full Name */}
-        <label className="block mb-2 font-medium">Full Name</label>
+        <label>Full Name</label>
         <input
           type="text"
-          name="fullName"
-          placeholder="e.g. Amin Mojiri"
-          value={formData.fullName}
+          name="full_name"
+          value={formData.full_name}
           onChange={handleChange}
-          className="w-full mb-4 p-2 border rounded-md"
           required
+          style={{ width: "100%", marginBottom: "10px" }}
         />
 
-        {/* Email */}
-        <label className="block mb-2 font-medium">Email</label>
+        <label>Email</label>
         <input
           type="email"
           name="email"
-          placeholder="you@example.com"
           value={formData.email}
           onChange={handleChange}
-          className="w-full mb-4 p-2 border rounded-md"
           required
+          style={{ width: "100%", marginBottom: "10px" }}
         />
 
-        {/* Country */}
-        <label className="block mb-2 font-medium">Country</label>
+        <label>Country</label>
         <input
           type="text"
           name="country"
-          placeholder="e.g. USA"
           value={formData.country}
           onChange={handleChange}
-          className="w-full mb-4 p-2 border rounded-md"
           required
+          style={{ width: "100%", marginBottom: "10px" }}
         />
 
-        {/* Username */}
-        <label className="block mb-2 font-medium">Username</label>
+        <label>Username</label>
         <input
           type="text"
           name="username"
-          placeholder="Choose a username"
           value={formData.username}
           onChange={handleChange}
-          className="w-full mb-4 p-2 border rounded-md"
           required
+          style={{ width: "100%", marginBottom: "10px" }}
         />
 
-        {/* Password */}
-        <label className="block mb-2 font-medium">Password</label>
+        <label>Password</label>
         <input
           type="password"
           name="password"
-          placeholder="********"
           value={formData.password}
           onChange={handleChange}
-          className="w-full mb-6 p-2 border rounded-md"
           required
+          style={{ width: "100%", marginBottom: "10px" }}
         />
 
-        {/* Submit */}
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+          style={{
+            width: "100%",
+            padding: "10px",
+            background: "blue",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+          }}
         >
           Register
         </button>
 
-        {/* Message */}
         {message && (
-          <p className="mt-4 text-center text-sm text-red-600">{message}</p>
+          <p style={{ marginTop: "15px", textAlign: "center", color: "red" }}>
+            {message}
+          </p>
         )}
       </form>
     </div>
