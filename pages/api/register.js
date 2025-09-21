@@ -6,20 +6,26 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { membership_type, company, name, email, country, username, password } = req.body;
+    const {
+      companyType,   // از فرم
+      companyName,
+      fullName,
+      email,
+      country,
+      username,
+      password,
+    } = req.body;
 
-    // چک کردن اینکه همه فیلدها پر شده باشند
-    if (!membership_type || !company || !name || !email || !country || !username || !password) {
+    if (!companyType || !companyName || !fullName || !email || !country || !username || !password) {
       return res.status(400).json({ success: false, message: 'All fields are required' });
     }
 
-    // کوئری درج اطلاعات
     const query = `
       INSERT INTO users (membership_type, company_name, full_name, email, country, username, password)
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING id
     `;
-    const values = [membership_type, company, name, email, country, username, password];
+    const values = [companyType, companyName, fullName, email, country, username, password];
 
     const result = await pool.query(query, values);
 
