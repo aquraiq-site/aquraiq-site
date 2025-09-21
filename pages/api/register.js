@@ -2,20 +2,13 @@ import pool from "../../lib/db";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({
-      success: false,
-      message: "Method not allowed. Please use POST.",
-    });
+    return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
   const { membership_type, company_name, full_name, email, country, username, password } = req.body;
 
-  // چک کن همه فیلدها پر باشن
   if (!membership_type || !company_name || !full_name || !email || !country || !username || !password) {
-    return res.status(400).json({
-      success: false,
-      message: "All fields are required.",
-    });
+    return res.status(400).json({ success: false, message: "All fields are required" });
   }
 
   try {
@@ -31,14 +24,13 @@ export default async function handler(req, res) {
     const result = await client.query(query, values);
     client.release();
 
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
-      message: "User registered successfully.",
+      message: "User registered successfully",
       user: result.rows[0],
     });
-
   } catch (err) {
-    console.error("DB error:", err); // لاگ کامل توی سرور
+    console.error("DB error:", err);
     return res.status(500).json({
       success: false,
       message: "Database connection failed. Please check your credentials.",
