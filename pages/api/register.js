@@ -1,15 +1,15 @@
 // pages/api/register.js
-import { pool } from "../../lib/db";
+import { pool } from "@/lib/db";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
   const { companyType, companyName, fullName, email, country, username, password } = req.body;
 
   if (!companyType || !companyName || !fullName || !email || !country || !username || !password) {
-    return res.status(400).json({ error: "All fields are required" });
+    return res.status(400).json({ success: false, message: "All fields are required" });
   }
 
   try {
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
     if (checkUser.rows.length > 0) {
       client.release();
-      return res.status(400).json({ error: "User already exists" });
+      return res.status(400).json({ success: false, message: "User already exists" });
     }
 
     // Insert new user
@@ -35,9 +35,8 @@ export default async function handler(req, res) {
 
     client.release();
     return res.status(201).json({ success: true, message: "User registered successfully" });
-
   } catch (error) {
     console.error("Error registering user:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 }
