@@ -1,5 +1,5 @@
 // pages/api/register.js
-import { pool } from "../../lib/db";
+import { pool } from "@/lib/db";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -15,6 +15,7 @@ export default async function handler(req, res) {
   try {
     const client = await pool.connect();
 
+    // Check if email already exists
     const checkUser = await client.query(
       "SELECT * FROM users WHERE email = $1",
       [email]
@@ -25,9 +26,9 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Email already exists" });
     }
 
+    // Insert new user (NO USERNAME)
     await client.query(
-      `INSERT INTO users (company_type, company_name, full_name, email, country, password)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
+      "INSERT INTO users (company_type, company_name, full_name, email, country, password) VALUES ($1, $2, $3, $4, $5, $6)",
       [companyType, companyName, fullName, email, country, password]
     );
 
