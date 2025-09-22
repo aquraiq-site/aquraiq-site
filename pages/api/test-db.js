@@ -1,22 +1,21 @@
 // pages/api/test-db.js
-import { pool } from "../../lib/db";
+import { pool } from "@/lib/db";
 
 export default async function handler(req, res) {
   try {
     const client = await pool.connect();
-    const result = await client.query("SELECT NOW()");
+
+    // Just fetch users with email as unique identifier
+    const result = await client.query("SELECT id, company_type, company_name, full_name, email, country, created_at FROM users LIMIT 10");
+
     client.release();
 
     return res.status(200).json({
       success: true,
-      message: "Database connected successfully!",
-      time: result.rows[0],
+      users: result.rows,
     });
-  } catch (err) {
-    console.error("DB Connection Error:", err.message);
-    return res.status(500).json({
-      success: false,
-      error: err.message,
-    });
+  } catch (error) {
+    console.error("Database test error:", error);
+    return res.status(500).json({ success: false, error: "Database connection failed" });
   }
 }
