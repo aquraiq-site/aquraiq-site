@@ -1,21 +1,22 @@
 // pages/api/test-db.js
-import pool from "../../lib/db";
+import { pool } from "../../lib/db";
 
 export default async function handler(req, res) {
   try {
-    // یک کوئری ساده برای تست
-    const result = await pool.query("SELECT NOW()");
-    
-    res.status(200).json({
+    const client = await pool.connect();
+    const result = await client.query("SELECT NOW()");
+    client.release();
+
+    return res.status(200).json({
       success: true,
-      message: "Database connected successfully ✅",
-      time: result.rows[0]
+      message: "Database connected successfully!",
+      time: result.rows[0],
     });
-  } catch (error) {
-    console.error("Database connection error:", error);
-    res.status(500).json({
+  } catch (err) {
+    console.error("DB Connection Error:", err.message);
+    return res.status(500).json({
       success: false,
-      error: error.message,
+      error: err.message,
     });
   }
 }
