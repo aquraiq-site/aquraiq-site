@@ -1,5 +1,4 @@
-// pages/api/register.js
-import { pool } from "@/lib/db";  // If alias fails, use: "../../lib/db"
+import pool from "@/lib/db";
 import bcrypt from "bcryptjs";
 
 export default async function handler(req, res) {
@@ -7,37 +6,30 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { companyType, companyName, fullName, email, country, password } = req.body;
+  const { company_type, company_name, full_name, email, password, country } = req.body;
 
-  if (!companyType || !fullName || !email || !country || !password) {
-    return res.status(400).json({ error: "All fields are required" });
+  if (!email || !password || !full_name || !company_type || !country) {
+    return res.status(400).json({ error: "Missing required fields" });
   }
 
   try {
-    const client = await pool.connect();
-
-    // Check if email already exists
-    const checkUser = await client.query("SELECT id FROM users WHERE email = $1", [email]);
-    if (checkUser.rows.length > 0) {
-      client.release();
-      return res.status(400).json({ error: "Email already exists" });
-    }
-
     // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert new user
-    await client.query(
-      `INSERT INTO users (company_type, company_name, full_name, email, country, password)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [companyType, companyName || null, fullName, email, country, hashedPassword]
+    // Insert into DB
+    const result = await pool.query(
+      `INSERT INTO users (company_type, company_name, full_name, email, password, country)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING id, email, full_name`,
+      [company_type, company_name, full_name, email, hashedPassword, country]
     );
 
-    client.release();
-    return res.status(201).json({ success: true, message: "User registered successfully" });
+    return res.status(201).json({
+      message: "User registered successfully",
+      user: result.rows[0],
+    });
   } catch (error) {
-    console.error("Error registering user:", error);
+    console.error("Error inserting user:", error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }
